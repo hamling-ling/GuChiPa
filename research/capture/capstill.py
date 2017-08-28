@@ -36,9 +36,16 @@ class CvThread(threading.Thread):
 
             if ret == False:
                 continue
+            
+            height = image.shape[0]
+            width = image.shape[1]
+
+            edge_len = int(height * 0.8)
+            ori = (int((width - edge_len)/2), int((height-edge_len)/2))
+            cv2.rectangle(image, ori, (ori[0]+edge_len, ori[1]+edge_len), (255, 0, 0), 4)
 
             cv2.imshow("Capture", image)
-
+            
             cmd = self.getCmd()
             if(cmd != ""):
                 self.still(cmd, image)
