@@ -1,0 +1,9 @@
+python crop.py
+# x2
+python flip.py
+# x7
+python rot.py
+# x5
+python scale.py
+# x25
+python trans.py

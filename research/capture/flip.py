@@ -3,14 +3,8 @@ import glob
 import os
 import errno
 
-srcdir='raw'
-dstdir='crp'
-
-width=640
-height=480
-edge_len=int(height*0.8-10)
-crop_ori=(int((width-edge_len)/2),int((height-edge_len)/2))
-
+srcdir='crp'
+dstdir='flp'
 
 def make_sure_path_exists(path):
     try:
@@ -19,10 +13,13 @@ def make_sure_path_exists(path):
         if exception.errno != errno.EEXIST:
             raise
 
-def cropImage(filename):
+def flipImage(filename, flip):
     img = cv2.imread(filename)
-    crop_img = img[crop_ori[1]:crop_ori[1]+edge_len, crop_ori[0]:crop_ori[0]+edge_len]
-    return crop_img
+    if(flip):
+        flip_img = cv2.flip(img, 1)
+    else:
+        flip_img = img
+    return flip_img
 
 def writeImage(img, subdir, filename):
     make_sure_path_exists(dstdir)
@@ -32,14 +29,20 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processCrop(subdir) :
+def processFlip(subdir) :
     files = glob.glob(srcdir+'/'+subdir+'/*.png')
     for file in files:
-        img = cropImage(file)
-        filename = file[len(srcdir+'/'+subdir+'/'):len(file)]
+        img = flipImage(file, False)
+        filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
+        filename = filename + '_l.png'
         writeImage(img, subdir, filename)
 
-processCrop('g')
-processCrop('c')
-processCrop('a')
+        img = flipImage(file, True)
+        filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
+        filename = filename + '_r.png'
+        writeImage(img, subdir, filename)
+
+processFlip('g')
+processFlip('c')
+processFlip('a')
 
