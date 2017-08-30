@@ -7,3 +7,11 @@ python rot.py
 python scale.py
 # x25
 python trans.py
+# x3
+python contrast.py
+# x3
+python gamma.py
+# x2
+python gaussnoise.py
+# x3
+python saltnoise.py
