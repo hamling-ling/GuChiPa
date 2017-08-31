@@ -48,14 +48,14 @@ def writeImage(img, subdir, filename):
     print("saved " + fullname)
 
 def process(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         params = [-1, 0, 1]
         for p in params:
             img = saltNoiseImage(file, p)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
             filename = filename + '_sp'
-            filename = filename + "{0}".format(int(p)) + '.png'
+            filename = filename + "{0}".format(int(p)) + '.jpg'
             writeImage(img, subdir, filename)
 
 process('g')

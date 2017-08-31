@@ -29,20 +29,21 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processScale(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
-        trans_ys = [-0.2, -0.1, 0.0, 0.1, 0.2]
-        trans_xs = [-0.2, -0.1, 0.0, 0.1, 0.2]
+        trans_ys = [-0.2, 0.0,0.2]
+        trans_xs = [-0.2, 0.0,0.2]
         for tr_x in trans_xs:
             for tr_y in trans_ys:
                 img = transImage(file, (tr_x, tr_y))
                 filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
                 filename = filename + '_tr'
-                filename = filename + "{0:.1f}_{1:.1f}".format(tr_x,tr_y) + '.png'
+                filename = filename + "{0:.1f}_{1:.1f}".format(tr_x,tr_y) + '.jpg'
                 writeImage(img, subdir, filename)
     
-processScale('g')
-processScale('c')
-processScale('a')
+process('g')
+process('c')
+process('a')
+process('z')
 

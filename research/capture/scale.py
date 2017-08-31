@@ -28,18 +28,19 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processScale(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
-        scales = [0.8, 0.9, 1.0, 1.1, 1.2]
+        scales = [0.8, 1.0, 1.2]
         for scl in scales:
             img = scaleImage(file, scl)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
-            filename = filename + '_x' + "{0:.1f}".format(scl) + '.png'
+            filename = filename + '_x' + "{0:.1f}".format(scl) + '.jpg'
             writeImage(img, subdir, filename)
     
 
-processScale('g')
-processScale('c')
-processScale('a')
+process('g')
+process('c')
+process('a')
+process('z')
 

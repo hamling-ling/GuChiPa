@@ -68,7 +68,7 @@ class CvThread(threading.Thread):
             return
 
         now = datetime.datetime.now()
-        file = now.strftime("%Y%m%d_%H%M%S") + ".png"
+        file = now.strftime("%Y%m%d_%H%M%S") + ".jpg"
         dir = cmd
         make_sure_path_exists(dir)
         fullname = dir + '/' + file
