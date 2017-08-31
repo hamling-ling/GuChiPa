@@ -61,8 +61,9 @@ class CvThread(threading.Thread):
             self.cmd = cmd
  
     def still(self, cmd, image):
-        
-        if cmd != "g" and cmd != "c" and cmd != "a":
+
+        supported_cmds = ["g", "c", "a", "z"]
+        if (cmd in supported_cmds) == False:
             print("not recognized:" + cmd)
             return
 
