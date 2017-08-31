@@ -7,7 +7,6 @@ import numpy as np
 srcdir='cnt'
 dstdir='gam'
 
-# ルックアップテーブルの生成
 min_table = 50
 max_table = 205
 diff_table = max_table - min_table
@@ -15,7 +14,6 @@ diff_table = max_table - min_table
 LUT_G1 = np.arange(256, dtype = 'uint8' )
 LUT_G2 = np.arange(256, dtype = 'uint8' )
 
-# ガンマ変換ルックアップテーブル
 gamma1 = 0.75
 gamma2 = 1.5
 for i in range(256):
@@ -46,17 +44,18 @@ def writeImage(img, subdir, filename):
     print("saved " + fullname)
 
 def process(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         contrasts= [-1, 0, 1]
         for cont in contrasts:
             img = gammaImage(file, cont)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
             filename = filename + '_gm'
-            filename = filename + "{0}".format(cont) + '.png'
+            filename = filename + "{0}".format(cont) + '.jpg'
             writeImage(img, subdir, filename)
 
 process('g')
 process('c')
 process('a')
+process('z')
 

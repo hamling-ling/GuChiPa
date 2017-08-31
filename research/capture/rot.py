@@ -28,17 +28,18 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processRot(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
-        degrees = [-30, -20, -10, 0, 10, 20, 30]
+        degrees = [-30, 0, 30]
         for deg in degrees:
             img = rotImage(file, deg)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
-            filename = filename + '_rot' + str(deg) + '.png'
+            filename = filename + '_rot' + str(deg) + '.jpg'
             writeImage(img, subdir, filename)
 
-processRot('g')
-processRot('c')
-processRot('a')
+process('g')
+process('c')
+process('a')
+process('z')
 

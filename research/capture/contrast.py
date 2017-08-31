@@ -7,7 +7,6 @@ import numpy as np
 srcdir='trn'
 dstdir='cnt'
 
-# ルックアップテーブルの生成
 min_table = 50
 max_table = 205
 diff_table = max_table - min_table
@@ -15,7 +14,6 @@ diff_table = max_table - min_table
 LUT_HC = np.arange(256, dtype = 'uint8' )
 LUT_LC = np.arange(256, dtype = 'uint8' )
 
-# ハイコントラストLUT作成
 for i in range(0, min_table):
     LUT_HC[i] = 0
 for i in range(min_table, max_table):
@@ -23,7 +21,6 @@ for i in range(min_table, max_table):
 for i in range(max_table, 255):
     LUT_HC[i] = 255
 
-# ローコントラストLUT作成
 for i in range(256):
     LUT_LC[i] = min_table + i * (diff_table) / 255
 
@@ -50,18 +47,19 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processScale(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         contrasts= [-1, 0, 1]
         for cont in contrasts:
             img = contrastImage(file, cont)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
             filename = filename + '_ct'
-            filename = filename + "{0}".format(cont) + '.png'
+            filename = filename + "{0}".format(cont) + '.jpg'
             writeImage(img, subdir, filename)
 
-processScale('g')
-processScale('c')
-processScale('a')
+process('g')
+process('c')
+process('a')
+process('z')
 

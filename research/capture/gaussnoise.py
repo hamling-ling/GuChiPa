@@ -35,17 +35,18 @@ def writeImage(img, subdir, filename):
     print("saved " + fullname)
 
 def process(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         params = [False, True]
         for p in params:
             img = gaussNoiseImage(file, p)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
             filename = filename + '_gs'
-            filename = filename + "{0}".format(int(p)) + '.png'
+            filename = filename + "{0}".format(int(p)) + '.jpg'
             writeImage(img, subdir, filename)
 
 process('g')
 process('c')
 process('a')
+process('z')
 

@@ -29,20 +29,21 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processFlip(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         img = flipImage(file, False)
         filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
-        filename = filename + '_l.png'
+        filename = filename + '_l.jpg'
         writeImage(img, subdir, filename)
 
         img = flipImage(file, True)
         filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
-        filename = filename + '_r.png'
+        filename = filename + '_r.jpg'
         writeImage(img, subdir, filename)
 
-processFlip('g')
-processFlip('c')
-processFlip('a')
+process('g')
+process('c')
+process('a')
+process('z')
 

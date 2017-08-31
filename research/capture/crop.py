@@ -32,14 +32,15 @@ def writeImage(img, subdir, filename):
     cv2.imwrite(fullname, img)
     print("saved " + fullname)
 
-def processCrop(subdir) :
-    files = glob.glob(srcdir+'/'+subdir+'/*.png')
+def process(subdir) :
+    files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
         img = cropImage(file)
         filename = file[len(srcdir+'/'+subdir+'/'):len(file)]
         writeImage(img, subdir, filename)
 
-processCrop('g')
-processCrop('c')
-processCrop('a')
+process('g')
+process('c')
+process('a')
+process('z')
 
