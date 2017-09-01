@@ -3,27 +3,26 @@ import caffe
 import numpy as np
 from PIL import Image as image
 import lmdb
-import cv2
+import os
 
-caffe_root = '/home/pixela/GitHub/caffe'
+CAFFE_ROOT = os.environ['CAFFE_ROOT']
 
-MODEL_FILE = caffe_root + '/examples/guchipa/lenet.prototxt'
-PRETRAINED = caffe_root + '/examples/guchipa/lenet_iter_10000.caffemodel'
+db_path = CAFFE_ROOT + '/examples/guchipa/train_lmdb'
+#db_path = CAFFE_ROOT + '/examples/guchipa/test_lmdb'
 
-#net = caffe.Net(MODEL_FILE, PRETRAINED,caffe.TEST)
-#caffe.set_mode_cpu()
-
-
-db_path = caffe_root + '/examples/guchipa/mnist_train_lmdb'
 lmdb_env = lmdb.open(db_path)
 lmdb_txn = lmdb_env.begin()
 lmdb_cursor = lmdb_txn.cursor()
-count = 0
-correct = 0
 
+wanted_image_idx = 0
+print sys.argv
+if(len(sys.argv) > 1) :
+        wanted_image_idx = int(sys.argv[1])
+
+count = 0
 for key, value in lmdb_cursor:
 	count = count+1
-	if count > 15:
+	if count == wanted_image_idx:
 		break
 
 datum = caffe.proto.caffe_pb2.Datum()
@@ -35,7 +34,7 @@ image = image.astype(np.uint8)
 
 data=np.asarray([image])
 a=data[0][0]
-print "label=", label
+print "image[{0}], label={1}".format( wanted_image_idx, label)
 
 
 for i in range(0, 28):
