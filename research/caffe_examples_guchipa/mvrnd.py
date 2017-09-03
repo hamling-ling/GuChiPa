@@ -27,7 +27,7 @@ if(os.path.exists(dir_dst) == False):
 if(os.path.isdir(dir_dst) == False):
     print("{0} is not a directory".format(dir_dst))
     exit(1)
-    
+
 selected_files = random.sample(files, num_file)
 for f in selected_files:
     cmd = "mv {0} {1}".format(f, dir_dst)

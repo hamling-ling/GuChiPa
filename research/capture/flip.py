@@ -2,6 +2,7 @@ import cv2
 import glob
 import os
 import errno
+import sys
 
 srcdir='crp'
 dstdir='flp'
@@ -41,6 +42,14 @@ def process(subdir) :
         filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
         filename = filename + '_r.jpg'
         writeImage(img, subdir, filename)
+
+
+if(len(sys.argv) <= 2):
+    print("need src and dst dir")
+    exit(1)
+
+srcdir=sys.argv[1]
+dstdir=sys.argv[2]
 
 process('g')
 process('c')

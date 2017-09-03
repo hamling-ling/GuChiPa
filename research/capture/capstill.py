@@ -41,6 +41,7 @@ class CvThread(threading.Thread):
             width = image.shape[1]
 
             edge_len = int(height * 0.8)
+            original = image.copy()
             ori = (int((width - edge_len)/2), int((height-edge_len)/2))
             cv2.rectangle(image, ori, (ori[0]+edge_len, ori[1]+edge_len), (255, 0, 0), 4)
 
@@ -48,7 +49,7 @@ class CvThread(threading.Thread):
             
             cmd = self.getCmd()
             if(cmd != ""):
-                self.still(cmd, image)
+                self.still(cmd, original)
                 self.setCmd("")
         cv2.destroyAllWindows()
 

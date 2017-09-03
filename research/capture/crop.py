@@ -2,6 +2,7 @@ import cv2
 import glob
 import os
 import errno
+import sys
 
 srcdir='raw'
 dstdir='crp'
@@ -38,6 +39,13 @@ def process(subdir) :
         img = cropImage(file)
         filename = file[len(srcdir+'/'+subdir+'/'):len(file)]
         writeImage(img, subdir, filename)
+
+if(len(sys.argv) <= 2):
+    print("need src and dst dir")
+    exit(1)
+
+srcdir=sys.argv[1]
+dstdir=sys.argv[2]
 
 process('g')
 process('c')
