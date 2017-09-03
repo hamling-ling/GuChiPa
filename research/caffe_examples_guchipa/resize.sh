@@ -35,9 +35,6 @@ function listFiles {
     pushd .
     # avoid list too long error
     cd $SRC_DIR/$1
-    for entry in `ls *.png`; do
-	echo $entry $2 >> ../list_$1.txt
-    done
     find . -name "*.jpg" -exec echo "{} $2" \; >> ../list_$1.txt
     popd
 }
