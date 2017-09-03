@@ -3,6 +3,7 @@ import glob
 import os
 import errno
 import numpy as np
+import sys
 
 srcdir='scl'
 dstdir='trn'
@@ -41,7 +42,14 @@ def process(subdir) :
                 filename = filename + '_tr'
                 filename = filename + "{0:.1f}_{1:.1f}".format(tr_x,tr_y) + '.jpg'
                 writeImage(img, subdir, filename)
-    
+
+if(len(sys.argv) <= 2):
+    print("need src and dst dir")
+    exit(1)
+
+srcdir=sys.argv[1]
+dstdir=sys.argv[2]
+
 process('g')
 process('c')
 process('a')
