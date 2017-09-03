@@ -18,21 +18,15 @@ fi
 function resizeImage {
     pushd $SRC_DIR/$1
     find . -size 0 | xargs --no-run-if-empty rm
-    echo grayscalling $1
-    mogrify -depth 8 -colorspace gray "*.jpg"
+    echo grayscalling and resizing $1
+    mogrify -depth 8 -colorspace gray -resize 28x28 -format png "*.jpg"
     
     sync;sync;sync
     
-    echo resizing $1
-    mogrify -resize 28x28 -format png "*.jpg"
-
-    sync;sync;sync;
-    
-    echo size>10k
+    echo size more than 10k checking...
     echo find . -name *.png -size +30k
     find . -size +30k
 
-    sync;sync;sync;
     popd
 }
 
@@ -44,6 +38,7 @@ function listFiles {
     for entry in `ls *.png`; do
 	echo $entry $2 >> ../list_$1.txt
     done
+    find . -name "*.jpg" -exec echo "{} $2" \; >> ../list_$1.txt
     popd
 }
 
