@@ -9,7 +9,7 @@ dstdir='crp'
 
 width=640
 height=480
-edge_len=int(height*0.8-10)
+edge_len=int(height*0.7)
 crop_ori=(int((width-edge_len)/2),int((height-edge_len)/2))
 
 

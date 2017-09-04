@@ -18,7 +18,7 @@ def make_sure_path_exists(path):
 def transImage(filename, trans):
     img = cv2.imread(filename,0)
     rows,cols = img.shape
-    mat = np.float32([[1,0,cols*trans[0]],[0,1,rows*trans[1]]])
+    mat = np.float32([[1,0,rows*trans[0]],[0,1,rows*trans[1]]])
     rot_img = cv2.warpAffine(img, mat, (cols, rows))
     return rot_img
 
@@ -33,8 +33,8 @@ def writeImage(img, subdir, filename):
 def process(subdir) :
     files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
-        trans_ys = [-0.2, 0.0,0.2]
-        trans_xs = [-0.2, 0.0,0.2]
+        trans_ys = [-0.1, 0.0,0.1]
+        trans_xs = [-0.1, 0.0,0.1]
         for tr_x in trans_xs:
             for tr_y in trans_ys:
                 img = transImage(file, (tr_x, tr_y))

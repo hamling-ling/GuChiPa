@@ -18,3 +18,5 @@ python gamma.py cnt gam
 #python gaussnoise.py
 # x3
 #python saltnoise.py
+
+

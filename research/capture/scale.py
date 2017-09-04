@@ -3,6 +3,7 @@ import glob
 import os
 import errno
 import sys
+import numpy as np
 
 srcdir='flp'
 dstdir='scl'
@@ -18,7 +19,13 @@ def scaleImage(filename, mag):
     img = cv2.imread(filename,0)
     rows,cols = img.shape
     M = cv2.getRotationMatrix2D((cols/2, rows/2), 0, mag)
-    rot_img = cv2.warpAffine(img, M, (cols, rows))
+
+    bg_img = np.zeros(img.shape, np.uint8)
+    meancolor=np.mean(img,axis=(0,1))
+    bg_img = bg_img + int(meancolor)
+    print(meancolor)
+    rot_img = cv2.warpAffine(img, M, (cols, rows), bg_img, borderMode=cv2.BORDER_TRANSPARENT)
+    
     return rot_img
 
 def writeImage(img, subdir, filename):
@@ -32,7 +39,7 @@ def writeImage(img, subdir, filename):
 def process(subdir) :
     files = glob.glob(srcdir+'/'+subdir+'/*.jpg')
     for file in files:
-        scales = [0.8, 1.0, 1.2]
+        scales = [0.9, 1.0, 1.1]
         for scl in scales:
             img = scaleImage(file, scl)
             filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
