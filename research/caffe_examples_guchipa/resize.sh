@@ -19,13 +19,11 @@ function resizeImage {
     pushd $SRC_DIR/$1
     find . -size 0 | xargs --no-run-if-empty rm
     echo grayscalling and resizing $1
-    mogrify -depth 8 -colorspace gray -resize 28x28 -format png "*.jpg"
+    mogrify -depth 8 -colorspace gray -resize 28x28 -format png ephemeral:"*.jpg"
     
-    sync;sync;sync
-    
-    echo size more than 10k checking...
-    echo find . -name *.png -size +30k
-    find . -size +30k
+    #echo size more than 30k checking...
+    #echo find . -name "*.png" -size +30k
+    #find . -size +30k
 
     popd
 }
@@ -35,7 +33,7 @@ function listFiles {
     pushd .
     # avoid list too long error
     cd $SRC_DIR/$1
-    find . -name "*.jpg" -exec echo "{} $2" \; >> ../list_$1.txt
+    find . -name "*.png" -exec echo "{} $2" \; >> ../list_$1.txt
     popd
 }
 
@@ -68,15 +66,13 @@ find $SRC_DIR/z -name "*.png" -print0 | xargs -0 -I{} mv {} $SRC_DIR/all/
 #rm -rf $SRC_DIR/a
 #rm -rf $SRC_DIR/z
 
-sync;sync;sync;
-
 cat $SRC_DIR/list_*.txt > $SRC_DIR/list_all.txt
 rm -f $SRC_DIR/list_?.txt
 
-echo resizing $1
-mogrify -resize 28x28 "$SRC_DIR/all/*.png"
-sync;sync;sync;
+#echo resizing all
+#mogrify -resize 28x28 "$SRC_DIR/all/*.png"
+#sync;sync;sync;
 
-echo finding not procecced files
-echo find $SRC_DIR/all -size +30k
-find $SRC_DIR/all -size +30k
+#echo finding not procecced files
+#echo find $SRC_DIR/all -size +30k
+#find $SRC_DIR/all -size +30k
