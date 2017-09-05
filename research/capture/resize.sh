@@ -1,18 +1,18 @@
 # sub dir data/gam or data/tst should exist
 # when arg $1 == t to use data/tst
 
-sync
-sync
-sync
+mkdir -p ./data
 
 SRC_DIR="./data/nnsrc"
 
 if [ "$1" == "-t" ]; then
     SRC_DIR="./data/nntst"
     echo SRC_DIR=$SRC_DIR
-    rm -rf data/nntst;cp -r ~/GitHub/GuChiPa/research/capture/tst data/nntst
+    rm -rf data/nntst;
+    cp -r tst $SRC_DIR
 else
-    rm -rf data/nnsrc;cp -r ~/GitHub/GuChiPa/research/capture/gam data/nnsrc
+    rm -rf data/nnsrc;
+    cp -r tam $SRC_DIR
 fi
 
 function resizeImage {
