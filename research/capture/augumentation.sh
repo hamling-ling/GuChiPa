@@ -40,10 +40,15 @@ done
 function resizeImage {
     pushd .
     cd $1
-    find . -size 0 | xargs --no-run-if-empty rm
+
+    XARGS_NO_RUN=''
+    if [ `uname` = 'Linux' ]; then
+	XARGS_NO_RUN='--no-run-if-empty';
+    fi
+    find . -size 0 | xargs $XARGS_NO_RUN rm
     echo grayscalling and resizing $1
-    mogrify -depth 8 -colorspace gray -resize 28x28 -format png ephemeral:"*.jpg"
-    
+    mogrify -depth 8 -colorspace gray -resize 28x28 -format png "*.jpg"
+    find . -name "*.jpg" | xargs $XARGS_NO_RUN rm
 
     popd
 }
@@ -70,7 +75,7 @@ function mergeDir {
     cd ../
     echo "cd $(pwd) for $2"
     echo "cat list_$2.txt > list_all.txt"
-    cat list_$2.txt > list_all.txt
+    cat list_$2.txt >> list_all.txt
     echo "rm -f list_$2.txt"
     rm -f list_$2.txt
     popd
@@ -133,9 +138,9 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
     #python gaussnoise.py
     # x3
     #python saltnoise.py
-
+    
     ./takesample.sh 10000 gam tst
-    #./takesample.sh 10 gam tst
+    #./takesample.sh 1 gam tst
 fi
 
 if [ "$PROCESS_SRC" == "TRUE" ] ; then
