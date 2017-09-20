@@ -13,8 +13,8 @@ if(len(sys.argv) < 2):
 image_file = sys.argv[1]
 
 net = caffe.Classifier(MODEL_FILE, PRETRAINED, image_dims=(28,28), raw_scale=255)
-#caffe.set_mode_cpu()
-caffe.set_mode_gpu()
+caffe.set_mode_cpu()
+#caffe.set_mode_gpu()
 
 image = caffe.io.load_image(image_file, color=False)
 print(image.shape)
