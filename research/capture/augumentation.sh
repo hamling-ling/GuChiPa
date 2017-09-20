@@ -120,6 +120,7 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
     python flip.py raw flp
     # x3
     python rot.py flp rot
+    rm -rf flp
     # x3
     python scale.py rot scl
     rm -rf rot
@@ -134,6 +135,7 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
     rm -rf crp
     # x3
     python gamma.py cnt gam
+    rm -rf cnt
     # x2
     #python gaussnoise.py
     # x3
