@@ -11,7 +11,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "examples/lelenet_bg/mnist_train_lmdb"
+    source: "examples/lelenet_bg_gray28/train_lmdb"
     batch_size: 64
     backend: LMDB
   }
@@ -28,7 +28,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "examples/lelenet_bg/mnist_test_lmdb"
+    source: "examples/lelenet_bg_gray28/test_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -118,8 +118,6 @@ layer {
     stride: 2
   }
 }
-
-
 layer {
   name: "conv3"
   type: "Convolution"
@@ -195,9 +193,6 @@ layer {
   bottom: "ip1"
   top: "ip1"
 }
-
-
-
 layer {
   name: "drop1"
   type: "Dropout"
@@ -207,9 +202,6 @@ layer {
     dropout_ratio: 0.5
   }
 }
-
-
-
 layer {
   name: "ip2"
   type: "InnerProduct"
@@ -222,7 +214,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 10
+    num_output: 4
     weight_filler {
       type: "xavier"
     }
