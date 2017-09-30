@@ -4,6 +4,7 @@ PROCESS_AUG="TRUE"
 PROCESS_TST="TRUE"
 PROCESS_SRC="TRUE"
 PROCESS_DBG="FALSE"
+MOGRIFY_OPT="-colorspace gray -resize 28x28"
 
 for OPT in "$@"PT in "$@"
 do
@@ -37,6 +38,14 @@ do
     fi
 done
 
+for OPT in "$@"PT in "$@"
+do
+    if [ "$OPT" = "-color" ] ; then
+	MOGRIFY_OPT="-resize 64x64"
+	break;
+    fi
+done
+
 function resizeImage {
     pushd .
     cd $1
@@ -47,7 +56,7 @@ function resizeImage {
     fi
     find . -size 0 | xargs $XARGS_NO_RUN rm
     echo grayscalling and resizing $1
-    mogrify -depth 8 -colorspace gray -resize 28x28 -format png "*.jpg"
+    mogrify -depth 8 $MOGRIFY_OPT -format png "*.jpg"
     find . -name "*.jpg" | xargs $XARGS_NO_RUN rm
 
     popd
