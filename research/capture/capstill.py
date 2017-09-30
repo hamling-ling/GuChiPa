@@ -40,7 +40,7 @@ class CvThread(threading.Thread):
             height = image.shape[0]
             width = image.shape[1]
 
-            edge_len = int(height * 0.8)
+            edge_len = int(height * 0.7)
             original = image.copy()
             ori = (int((width - edge_len)/2), int((height-edge_len)/2))
             cv2.rectangle(image, ori, (ori[0]+edge_len, ori[1]+edge_len), (255, 0, 0), 4)
