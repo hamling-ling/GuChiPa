@@ -16,13 +16,13 @@ def make_sure_path_exists(path):
             raise
 
 def scaleImage(filename, mag):
-    img = cv2.imread(filename,0)
-    rows,cols = img.shape
+    img = cv2.imread(filename,1)
+    rows,cols,chs = img.shape
     M = cv2.getRotationMatrix2D((cols/2, rows/2), 0, mag)
 
     bg_img = np.zeros(img.shape, np.uint8)
     meancolor=np.mean(img,axis=(0,1))
-    bg_img = bg_img + int(meancolor)
+    bg_img = bg_img + meancolor.astype(np.uint8)
     print(meancolor)
     rot_img = cv2.warpAffine(img, M, (cols, rows), bg_img, borderMode=cv2.BORDER_TRANSPARENT)
     

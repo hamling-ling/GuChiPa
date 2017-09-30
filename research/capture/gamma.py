@@ -29,7 +29,7 @@ def make_sure_path_exists(path):
             raise
 
 def gammaImage(filename, cont):
-    img = cv2.imread(filename,0)
+    img = cv2.imread(filename,1)
     if(cont == -1):
         return cv2.LUT(img, LUT_G1)
     if(cont == 1):

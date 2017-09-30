@@ -15,7 +15,7 @@ def make_sure_path_exists(path):
             raise
 
 def saltNoiseImage(filename, param):
-    img = cv2.imread(filename)
+    img = cv2.imread(filename, 1)
     if(param == 0):
         return img
     

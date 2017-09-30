@@ -16,8 +16,8 @@ def make_sure_path_exists(path):
             raise
 
 def transImage(filename, trans):
-    img = cv2.imread(filename,0)
-    rows,cols = img.shape
+    img = cv2.imread(filename,1)
+    rows,cols,chs = img.shape
     mat = np.float32([[1,0,rows*trans[0]],[0,1,rows*trans[1]]])
     rot_img = cv2.warpAffine(img, mat, (cols, rows))
     return rot_img

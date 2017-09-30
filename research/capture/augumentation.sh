@@ -117,41 +117,55 @@ function processDir {
 }
 
 if [ "$PROCESS_DBG" == "TRUE" ] ; then
-
     # do something for debug
-    exit 0
+    echo "debuging mode"
 fi
 
 if [ "$PROCESS_AUG" == "TRUE" ] ; then
+    echo "processing augumentation"
     rm -rf flp rot scl trs crp cnt gam tst
 
-    # x2
-    python flip.py raw flp
-    # x3
-    python rot.py flp rot
-    rm -rf flp
-    # x3
-    python scale.py rot scl
-    rm -rf rot
-    # x9
-    python trans.py scl trs
-    rm -rf scl
-    # x1
-    python crop.py trs crp
-    rm -rf trs
-    # x3
-    python contrast.py crp cnt
-    rm -rf crp
-    # x3
-    python gamma.py cnt gam
-    rm -rf cnt
-    # x2
-    #python gaussnoise.py
-    # x3
-    #python saltnoise.py
+    if [ "$PROCESS_DBG" == "FALSE" ] ; then
+ 
+	# x2
+	python flip.py raw flp
+	# x3
+	python rot.py flp rot
+	#rm -rf flp
+	# x3
+	python scale.py rot scl
+	#rm -rf rot
+	# x9
+	python trans.py scl trs
+	#rm -rf scl
+   
+	# x1
+	python crop.py trs crp
+	#rm -rf trs
+	# x3
+	python contrast.py crp cnt
+	#rm -rf crp
+	# x3
+	python gamma.py cnt gam
+	#rm -rf cnt
+	# x2
+	#python gaussnoise.py
+	# x3
+	#python saltnoise.py
     
-    ./takesample.sh 10000 gam tst
-    #./takesample.sh 1 gam tst
+	./takesample.sh 10000 gam tst
+    else
+	echo "not actually augumenting for debug"
+	# x1
+	python crop.py raw crp
+	#rm -rf trs
+	# x3
+	python contrast.py crp cnt
+	#rm -rf crp
+	# x3
+	python gamma.py cnt gam
+	./takesample.sh 1 gam tst
+    fi
 fi
 
 if [ "$PROCESS_SRC" == "TRUE" ] ; then
