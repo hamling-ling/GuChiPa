@@ -8,22 +8,6 @@ MOGRIFY_OPT="-colorspace gray -resize 28x28"
 
 for OPT in "$@"PT in "$@"
 do
-    if [ "$OPT" = "-ns" ] ; then
-	PROCESS_SRC="FALSE"
-	break;
-    fi
-done
-
-for OPT in "$@"PT in "$@"
-do
-    if [ "$OPT" = "-nt" ] ; then
-	PROCESS_TST="FALSE"
-	break;
-    fi
-done
-
-for OPT in "$@"PT in "$@"
-do
     if [ "$OPT" = "-naug" ] ; then
 	PROCESS_AUG="FALSE"
 	break;
@@ -41,7 +25,7 @@ done
 for OPT in "$@"PT in "$@"
 do
     if [ "$OPT" = "-color" ] ; then
-	MOGRIFY_OPT="-resize 64x64"
+	MOGRIFY_OPT="-colors 256 -resize 64x64"
 	break;
     fi
 done
@@ -154,6 +138,7 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	#python saltnoise.py
     
 	./takesample.sh 10000 gam tst
+	./takesample.sh 10 gam dbg
     else
 	echo "not actually augumenting for debug"
 	# x1
@@ -165,21 +150,22 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	# x3
 	python gamma.py cnt gam
 	./takesample.sh 1 gam tst
+	echo taking 1 smple for debug
+	./takesample.sh 1 gam dbg
     fi
 fi
 
-if [ "$PROCESS_SRC" == "TRUE" ] ; then
-    processDir "gam"
-    echo "removing nnsrc"
-    rm -rf nnsrc
-    echo "rename gam -> nnsrc"
-    mv gam nnsrc
-fi
+processDir "gam"
+echo "removing nnsrc"
+rm -rf nnsrc
+echo "rename gam -> nnsrc"
+mv gam nnsrc
 
-if [ "$PROCESS_TST" == "TRUE" ] ; then
-    processDir "tst"
-    echo "removing nntst"
-    rm -rf nntst
-    echo "rename tst -> nntst"
-    mv tst nntst
-fi
+processDir "tst"
+echo "removing nntst"
+rm -rf nntst
+echo "rename tst -> nntst"
+mv tst nntst
+
+rm -rf nndbg
+mv dbg nndbg
