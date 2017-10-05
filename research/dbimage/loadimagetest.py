@@ -1,6 +1,8 @@
 import caffe
 import os
 import sys
+import numpy as np
+import cv2
 
 CAFFE_ROOT = os.getenv("CAFFE_ROOT")
 
@@ -12,6 +14,16 @@ image_file = sys.argv[1]
 
 image = caffe.io.load_image(image_file, color=True)
 
-print(image.shape)
-print(image)
+image=(image*255).astype(np.uint8)
+#print(image.shape)
+#print(image)
 
+rolled=np.rollaxis(image,2)
+#print(rolled.shape)
+#print(rolled)
+
+#swapped=np.roll(rolled, 1, axis=-1)
+#swapped=rolled[...,[2,0,1]]
+swapped=rolled[::2,:,::2].copy()
+print(swapped.shape)
+print(swapped)
