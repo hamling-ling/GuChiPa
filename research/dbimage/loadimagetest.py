@@ -19,11 +19,16 @@ image=(image*255).astype(np.uint8)
 #print(image)
 
 rolled=np.rollaxis(image,2)
-#print(rolled.shape)
-#print(rolled)
+s0=rolled[0,:,:]
+s1=rolled[1,:,:]
+s2=rolled[2,:,:]
+rolled=np.array([s2,s1,s0])
+print(rolled.shape)
+print(rolled)
 
 #swapped=np.roll(rolled, 1, axis=-1)
 #swapped=rolled[...,[2,0,1]]
-swapped=rolled[::2,:,::2].copy()
-print(swapped.shape)
-print(swapped)
+#swapped=rolled[::2,:,::2].copy()
+#swapped=rolled[...,::-1]
+#print(swapped.shape)
+#print(swapped)
