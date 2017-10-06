@@ -1,0 +1,1 @@
+$CAFFE_ROOT/build/tools/caffe train --solver /home/nobu/GitHub/deeplearning-cats-dogs-tutorial/caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee /home/nobu/GitHub/deeplearning-cats-dogs-tutorial/caffe_models/caffe_model_1/model_1_train.log
