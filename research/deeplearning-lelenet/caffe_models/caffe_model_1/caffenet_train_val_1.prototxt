@@ -9,19 +9,19 @@ layer {
   }
   transform_param {
     mirror: true
-    crop_size: 227
-    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/mean.binaryproto"
+    crop_size: 64
+    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-lelenet/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
 #  transform_param {
-#    crop_size: 227
+#    crop_size: 64
 #    mean_value: 104
 #    mean_value: 117
 #    mean_value: 123
 #    mirror: true
 #  }
   data_param {
-    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/train_lmdb"
+    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-lelenet/input/train_lmdb"
     batch_size: 256
     backend: LMDB
   }
@@ -36,19 +36,19 @@ layer {
   }
   transform_param {
     mirror: false
-    crop_size: 227
-    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/mean.binaryproto"
+    crop_size: 64
+    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-lelenet/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
 #  transform_param {
-#    crop_size: 227
+#    crop_size: 64
 #    mean_value: 104
 #    mean_value: 117
 #    mean_value: 123
 #    mirror: true
 #  }
   data_param {
-    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/test_lmdb"
+    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-lelenet/input/test_lmdb"
     batch_size: 50
     backend: LMDB
   }

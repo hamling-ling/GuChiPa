@@ -21,8 +21,8 @@ from caffe.proto import caffe_pb2
 caffe.set_mode_gpu() 
 
 #Size of images
-IMAGE_WIDTH = 227
-IMAGE_HEIGHT = 227
+IMAGE_WIDTH = 64
+IMAGE_HEIGHT = 64
 
 '''
 Image processing helper function
