@@ -26,7 +26,7 @@ for OPT in "$@"PT in "$@"
 do
     if [ "$OPT" = "-color" ] ; then
 	#MOGRIFY_OPT="-colors 256 -resize 64x64"
-	MOGRIFY_OPT="-depth 8 -resize 227x227"
+	MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 227x227"
 	break;
     fi
 done
@@ -41,8 +41,8 @@ function resizeImage {
     fi
     find . -size 0 | xargs $XARGS_NO_RUN rm
     echo grayscalling and resizing $1
-    mogrify -depth 8 $MOGRIFY_OPT -format png "*.jpg"
-    find . -name "*.jpg" | xargs $XARGS_NO_RUN rm
+    mogrify -depth 8 $MOGRIFY_OPT -format jpg "*.jpg"
+    #find . -name "*.jpg" | xargs $XARGS_NO_RUN rm
 
     popd
 }
@@ -53,8 +53,8 @@ function listFiles {
     cd $1
     echo "entering $1"
     # avoid list too long error
-    echo "find . -name "*.png" -exec echo "{} $2" \; >> ../list_$2.txt"
-    find . -name "*.png" -exec echo "{} $2" \; >> ../list_$2.txt
+    echo "find . -name "*.jpg" -exec echo "{} $2" \; >> ../list_$2.txt"
+    find . -name "*.jpg" -exec echo "{} $2" \; >> ../list_$2.txt
     popd
 }
 
@@ -64,7 +64,7 @@ function mergeDir {
     pushd .
     cd $1
     echo "entering $1"
-    find . -name "*.png" -print0 | xargs -0 -I{} mv {} ../../$3/
+    find . -name "*.jpg" -print0 | xargs -0 -I{} mv {} ../../$3/
 
     cd ../
     echo "cd $(pwd) for $2"
@@ -108,7 +108,7 @@ fi
 
 if [ "$PROCESS_AUG" == "TRUE" ] ; then
     echo "processing augumentation"
-    rm -rf flp rot scl trs crp cnt gam tst
+    rm -rf flp rot scl trs crp cnt gam src tst dbg
 
     if [ "$PROCESS_DBG" == "FALSE" ] ; then
  
@@ -116,30 +116,30 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	python flip.py raw flp
 	# x3
 	python rot.py flp rot
-	#rm -rf flp
+	rm -rf flp
 	# x3
 	python scale.py rot scl
-	#rm -rf rot
-	# x9
+	rm -rf rot
+	# x5
 	python trans.py scl trs
-	#rm -rf scl
+	rm -rf scl
    
 	# x1
 	python crop.py trs crp
-	#rm -rf trs
+	rm -rf trs
 	# x3
 	python contrast.py crp cnt
-	#rm -rf crp
+	rm -rf crp
 	# x3
-	python gamma.py cnt gam
+	#python gamma.py cnt gam
 	#rm -rf cnt
 	# x2
 	#python gaussnoise.py
 	# x3
 	#python saltnoise.py
-    
-	./takesample.sh 10000 gam tst
-	./takesample.sh 10 gam dbg
+	mv cnt src
+	./takesample.sh 1000 src tst
+	./takesample.sh 10 src dbg
     else
 	echo "not actually augumenting for debug"
 	# x1
@@ -148,19 +148,18 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	# x3
 	python contrast.py crp cnt
 	#rm -rf crp
-	# x3
-	python gamma.py cnt gam
-	./takesample.sh 1 gam tst
+	mv cnt src
+	./takesample.sh 1 src tst
 	echo taking 1 smple for debug
-	./takesample.sh 1 gam dbg
+	./takesample.sh 1 src dbg
     fi
 fi
 
-processDir "gam"
+processDir "src"
 echo "removing nnsrc"
 rm -rf nnsrc
-echo "rename gam -> nnsrc"
-mv gam nnsrc
+echo "rename src -> nnsrc"
+mv src nnsrc
 
 processDir "tst"
 echo "removing nntst"

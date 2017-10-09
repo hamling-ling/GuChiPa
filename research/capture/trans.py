@@ -37,6 +37,13 @@ def process(subdir) :
         trans_xs = [-0.1, 0.0,0.1]
         for tr_x in trans_xs:
             for tr_y in trans_ys:
+                
+                if tr_x == 0.0 and tr_y != 0.0:
+                    #skip horizontal trans to reduce file num
+                    continue
+                if tr_x != 0.0 and tr_y == 0.0:
+                    #skip vertical trans to reduce file num
+                    continue
                 img = transImage(file, (tr_x, tr_y))
                 filename = file[len(srcdir+'/'+subdir+'/'):len(file)-4]
                 filename = filename + '_tr'

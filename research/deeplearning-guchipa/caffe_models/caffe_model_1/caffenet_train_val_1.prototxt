@@ -10,7 +10,7 @@ layer {
   transform_param {
     mirror: true
     crop_size: 227
-    mean_file: "/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/mean.binaryproto"
+    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
 #  transform_param {
@@ -21,7 +21,7 @@ layer {
 #    mirror: true
 #  }
   data_param {
-    source: "/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/train_lmdb"
+    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/train_lmdb"
     batch_size: 256
     backend: LMDB
   }
@@ -37,7 +37,7 @@ layer {
   transform_param {
     mirror: false
     crop_size: 227
-    mean_file: "/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/mean.binaryproto"
+    mean_file: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
 #  transform_param {
@@ -48,7 +48,7 @@ layer {
 #    mirror: true
 #  }
   data_param {
-    source: "/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/validation_lmdb"
+    source: "/home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/input/test_lmdb"
     batch_size: 50
     backend: LMDB
   }
@@ -80,7 +80,7 @@ layer {
     }
   }
 }
-glayer {
+layer {
   name: "relu1"
   type: "ReLU"
   bottom: "conv1"
@@ -370,7 +370,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 2
+    num_output: 4
     weight_filler {
       type: "gaussian"
       std: 0.01

@@ -23,7 +23,7 @@ def scaleImage(filename, mag):
     bg_img = np.zeros(img.shape, np.uint8)
     meancolor=np.mean(img,axis=(0,1))
     bg_img = bg_img + meancolor.astype(np.uint8)
-    print(meancolor)
+    #print(meancolor)
     rot_img = cv2.warpAffine(img, M, (cols, rows), bg_img, borderMode=cv2.BORDER_TRANSPARENT)
     
     return rot_img

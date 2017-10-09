@@ -10,12 +10,22 @@ python_version  :2.7.11
 '''
 
 import os
+import sys
 import glob
 import cv2
 import caffe
 import lmdb
 import numpy as np
 from caffe.proto import caffe_pb2
+
+deeplearning_root=os.path.dirname(os.path.realpath(__file__ + '/../'))
+print("deeplearning_root=" + deeplearning_root)
+
+if(len(sys.argv) < 1):
+        print("need srd dir")
+        exit(1)
+
+input_path = sys.argv[1]
 
 caffe.set_mode_gpu() 
 
@@ -45,15 +55,15 @@ Reading mean image, caffe model and its weights
 '''
 #Read mean image
 mean_blob = caffe_pb2.BlobProto()
-with open('/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/mean.binaryproto') as f:
+with open(deeplearning_root + '/input/mean.binaryproto') as f:
     mean_blob.ParseFromString(f.read())
 mean_array = np.asarray(mean_blob.data, dtype=np.float32).reshape(
     (mean_blob.channels, mean_blob.height, mean_blob.width))
 
 
 #Read model architecture and trained model's weights
-net = caffe.Net('/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/caffe_models/caffe_model_1/caffenet_deploy_1.prototxt',
-                '/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/caffe_models/caffe_model_1/caffe_model_1_iter_10000.caffemodel',
+net = caffe.Net(deeplearning_root + '/caffe_models/caffe_model_1/caffenet_deploy_1.prototxt',
+                deeplearning_root + '/caffe_models/caffe_model_1/caffe_model_1_iter_10000.caffemodel',
                 caffe.TEST)
 
 #Define image transformers
@@ -65,7 +75,7 @@ transformer.set_transpose('data', (2,0,1))
 Making predicitions
 '''
 #Reading image paths
-test_img_paths = [img_path for img_path in glob.glob("../input/test1/*jpg")]
+test_img_paths = [img_path for img_path in glob.glob(input_path + '/*/*jpg')]
 
 #Making predictions
 test_ids = []
@@ -88,7 +98,7 @@ for img_path in test_img_paths:
 '''
 Making submission file
 '''
-with open("../caffe_models/caffe_model_1/submission_model_1.csv","w") as f:
+with open("submission_model_1.csv","w") as f:
     f.write("id,label\n")
     for i in range(len(test_ids)):
         f.write(str(test_ids[i])+","+str(preds[i])+"\n")

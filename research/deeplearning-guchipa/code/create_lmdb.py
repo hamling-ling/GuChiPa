@@ -19,6 +19,8 @@ import cv2
 import caffe
 from caffe.proto import caffe_pb2
 import lmdb
+import re
+import sys
 
 #Size of images
 IMAGE_WIDTH = 227
@@ -46,54 +48,56 @@ def make_datum(img, label):
         label=label,
         data=np.rollaxis(img, 2).tostring())
 
-train_lmdb = '/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/train_lmdb'
-validation_lmdb = '/home/nobu/GitHub/deeplearning-cats-dogs-tutorial/input/validation_lmdb'
 
-os.system('rm -rf  ' + train_lmdb)
-os.system('rm -rf  ' + validation_lmdb)
+if(len(sys.argv) < 2):
+    print("need srd and dst dir")
+    exit(1)
 
+src_dir = sys.argv[1]
+lmdb_dir = sys.argv[2]
 
-train_data = [img for img in glob.glob("../input/train/*jpg")]
-test_data = [img for img in glob.glob("../input/test1/*jpg")]
+os.system('rm -rf  ' + lmdb_dir)
+
+with open(src_dir + "/list_all.txt") as f:
+    lines = f.readlines()
+
+file_info_list = []
+for line in lines:
+    line = line.strip()
+    m = re.search("\./(.+)\s(\d)", line)
+    if m:
+        file_info_list.append((m.group(1),m.group(2)))
+#print(file_info_list)
 
 #Shuffle train_data
-random.shuffle(train_data)
+random.shuffle(file_info_list)
 
 print 'Creating train_lmdb'
 
-in_db = lmdb.open(train_lmdb, map_size=int(1e12))
-with in_db.begin(write=True) as in_txn:
-    for in_idx, img_path in enumerate(train_data):
-        if in_idx %  6 == 0:
-            continue
-        img = cv2.imread(img_path, cv2.IMREAD_COLOR)
-        img = transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT)
-        if 'cat' in img_path:
-            label = 0
-        else:
-            label = 1
-        datum = make_datum(img, label)
-        in_txn.put('{:0>5d}'.format(in_idx), datum.SerializeToString())
-        print '{:0>5d}'.format(in_idx) + ':' + img_path
+in_db = lmdb.open(lmdb_dir, map_size=int(1e12))
+in_idx = 0
+in_txn = in_db.begin(write=True)
+uncommitted_exist=False
+for fn, lbl in file_info_list:
+    full_fn = src_dir + "/all/" + fn
+
+    img = cv2.imread(full_fn, cv2.IMREAD_COLOR)
+    img = transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT)
+    datum = make_datum(img, int(lbl))
+    in_txn.put('{:0>5d}'.format(in_idx), datum.SerializeToString())
+    uncommited_exist = True
+    print '{:0>5d}'.format(in_idx) + ':' + fn
+
+    if(in_idx % 1000 == 0):
+        in_txn.commit()
+        in_txn = in_db.begin(write=True)
+        uncommited_exist = False
+    in_idx = in_idx+1
+
+if(uncommited_exist):
+    in_txn.commit()
+
 in_db.close()
 
-
-print '\nCreating validation_lmdb'
-
-in_db = lmdb.open(validation_lmdb, map_size=int(1e12))
-with in_db.begin(write=True) as in_txn:
-    for in_idx, img_path in enumerate(train_data):
-        if in_idx % 6 != 0:
-            continue
-        img = cv2.imread(img_path, cv2.IMREAD_COLOR)
-        img = transform_img(img, img_width=IMAGE_WIDTH, img_height=IMAGE_HEIGHT)
-        if 'cat' in img_path:
-            label = 0
-        else:
-            label = 1
-        datum = make_datum(img, label)
-        in_txn.put('{:0>5d}'.format(in_idx), datum.SerializeToString())
-        print '{:0>5d}'.format(in_idx) + ':' + img_path
-in_db.close()
 
 print '\nFinished processing all images'
