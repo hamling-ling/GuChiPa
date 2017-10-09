@@ -1,0 +1,1 @@
+$CAFFE_ROOT/build/tools/caffe train --solver /home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee /home/nobu/GitHub/GuChiPa/research/deeplearning-guchipa/caffe_models/caffe_model_1/model_1_train.log
