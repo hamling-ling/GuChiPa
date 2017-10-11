@@ -26,7 +26,8 @@ for OPT in "$@"PT in "$@"
 do
     if [ "$OPT" = "-color" ] ; then
 	#MOGRIFY_OPT="-colors 256 -resize 64x64"
-	MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 227x227"
+	#MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 227x227"
+	MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 64x64"
 	break;
     fi
 done
