@@ -9,6 +9,6 @@ display: 50
 max_iter: 10000
 momentum: 0.9
 weight_decay: 0.0005
-snapshot: 5000
+snapshot: 2000
 snapshot_prefix: "/home/nobu/GitHub/GuChiPa/research/deeplearning-lelenet/caffe_models/caffe_model_1/caffe_model_1"
 solver_mode: GPU
