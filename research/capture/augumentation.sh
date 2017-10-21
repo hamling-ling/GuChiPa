@@ -4,7 +4,7 @@ PROCESS_AUG="TRUE"
 PROCESS_TST="TRUE"
 PROCESS_SRC="TRUE"
 PROCESS_DBG="FALSE"
-MOGRIFY_OPT="-colorspace gray -resize 28x28"
+MOGRIFY_OPT=MOGRIFY_OPT="-define jpeg:size=227x227 -resize 64x64"
 
 for OPT in "$@"PT in "$@"
 do
@@ -24,10 +24,8 @@ done
 
 for OPT in "$@"PT in "$@"
 do
-    if [ "$OPT" = "-color" ] ; then
-	#MOGRIFY_OPT="-colors 256 -resize 64x64"
-	#MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 227x227"
-	MOGRIFY_OPT="-depth 8 -define jpeg:size=227x227 -resize 64x64"
+    if [ "$OPT" = "-gray" ] ; then
+	MOGRIFY_OPT="-colorspace gray -resize 28x28"
 	break;
     fi
 done
@@ -109,14 +107,12 @@ fi
 
 if [ "$PROCESS_AUG" == "TRUE" ] ; then
     echo "processing augumentation"
-    rm -rf flp rot scl trs crp cnt gam src tst dbg
+    rm -rf rot scl trs crp cnt src tst dbg
 
     if [ "$PROCESS_DBG" == "FALSE" ] ; then
  
-	# x2
-	python flip.py raw flp
 	# x3
-	python rot.py flp rot
+	python rot.py raw rot
 	rm -rf flp
 	# x3
 	python scale.py rot scl
@@ -141,6 +137,8 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	mv cnt src
 	./takesample.sh 1000 src tst
 	./takesample.sh 10 src dbg
+	#./takesample.sh 10 src tst
+	#./takesample.sh 10 src dbg
     else
 	echo "not actually augumenting for debug"
 	# x1

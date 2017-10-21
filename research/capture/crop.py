@@ -7,12 +7,6 @@ import sys
 srcdir='raw'
 dstdir='crp'
 
-width=640
-height=480
-edge_len=int(height*0.7)
-crop_ori=(int((width-edge_len)/2),int((height-edge_len)/2))
-
-
 def make_sure_path_exists(path):
     try:
         os.makedirs(path)
@@ -22,6 +16,11 @@ def make_sure_path_exists(path):
 
 def cropImage(filename):
     img = cv2.imread(filename)
+    width=img.shape[1]
+    height=img.shape[0]
+    edge_len=int(height*0.7)
+    crop_ori=(int((width-edge_len)/2),int((height-edge_len)/2))
+
     crop_img = img[crop_ori[1]:crop_ori[1]+edge_len, crop_ori[0]:crop_ori[0]+edge_len]
     return crop_img
 
