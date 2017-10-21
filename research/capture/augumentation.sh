@@ -4,7 +4,7 @@ PROCESS_AUG="TRUE"
 PROCESS_TST="TRUE"
 PROCESS_SRC="TRUE"
 PROCESS_DBG="FALSE"
-MOGRIFY_OPT=MOGRIFY_OPT="-define jpeg:size=227x227 -resize 64x64"
+MOGRIFY_OPT="-define jpeg:size=227x227 -resize 64x64"
 
 for OPT in "$@"PT in "$@"
 do
