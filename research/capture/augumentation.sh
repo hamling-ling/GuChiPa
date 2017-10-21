@@ -113,7 +113,6 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
  
 	# x3
 	python rot.py raw rot
-	rm -rf flp
 	# x3
 	python scale.py rot scl
 	rm -rf rot
@@ -135,7 +134,7 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	# x3
 	#python saltnoise.py
 	mv cnt src
-	./takesample.sh 1000 src tst
+	./takesample.sh 10000 src tst
 	./takesample.sh 10 src dbg
 	#./takesample.sh 10 src tst
 	#./takesample.sh 10 src dbg
