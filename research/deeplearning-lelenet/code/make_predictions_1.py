@@ -14,7 +14,6 @@ import sys
 import glob
 import cv2
 import caffe
-import lmdb
 import numpy as np
 from caffe.proto import caffe_pb2
 
