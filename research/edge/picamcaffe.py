@@ -1,4 +1,5 @@
 import caffe
+from caffe.proto import caffe_pb2
 import os
 import sys
 import cv2
@@ -8,15 +9,16 @@ import picamera
 from picamera.array import PiRGBArray
 import time
 
-CAFFE_IMG_WIDTH = 64
-CAFFE_IMG_HEIGHT = 64
+CAFFE_IMAGE_WIDTH = 64
+CAFFE_IMAGE_HEIGHT = 64
 FILE_PATH=os.path.dirname(os.path.realpath(__file__))
 DEEPLEARNING_ROOT=os.path.realpath(FILE_PATH + '/../deeplearning-lelenet')
 print("DEEPLEARNING_ROOT=" + DEEPLEARNING_ROOT)
 
 CAFFE_ROOT = os.getenv("CAFFE_ROOT")
 MODEL_FILE = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffenet_deploy_1.prototxt'
-PRETRAINED =DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_5000.caffemodel'
+PRETRAINED = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_5000.caffemodel'
+MEAN_FILE  = DEEPLEARNING_ROOT + '/input/mean.binaryproto'
 
 CAMERA_WIDTH = 320
 CAMERA_HEIGHT = 240
@@ -29,10 +31,23 @@ for i in range(256):
     LUT_G1[i] = 255 * pow(float(i) / 255, 1.0 / gamma1)
 
 def initCaffe():
-    net = caffe.Classifier(MODEL_FILE, PRETRAINED, image_dims=(64,64), raw_scale=255)
+    mean_blob = caffe_pb2.BlobProto()
+    mean_array = None
+    with open(MEAN_FILE) as f:
+        mean_blob.ParseFromString(f.read())
+        mean_array = np.asarray(mean_blob.data, dtype=np.float32).reshape(
+                    (mean_blob.channels, mean_blob.height, mean_blob.width))
+
+    net = caffe.Net(MODEL_FILE, PRETRAINED,
+                    caffe.TEST)
     caffe.set_mode_cpu()
-    #caffe.set_mode_gpu()
-    return net
+
+    #Define image transformers
+    transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
+    transformer.set_mean('data', mean_array)
+    transformer.set_transpose('data', (2,0,1))
+    
+    return net, transformer
 
 def initCv():
     camera = picamera.PiCamera()
@@ -53,7 +68,7 @@ def initSnd():
     snd_a = pygame.mixer.Sound('snd/a.wav')
     return [snd_g, snd_c, snd_a]
 
-def cvtImg(img):
+def cropImg(img):
     width = img.shape[1]
     height = img.shape[0]
     offset = (width-height)/2
@@ -61,33 +76,30 @@ def cvtImg(img):
 
     crop_img = img[0:edge_len, offset:offset+edge_len, :]
     
-    #img = cv2.LUT(img, LUT_G1)
-    #cv2.imshow('camera', crop_img)
-    
-    scaled_img = cv2.resize(crop_img,(CAFFE_IMG_WIDTH,CAFFE_IMG_HEIGHT))
-    #print("resized shape={0}".format(img.shape))
-    scaled_img = np.reshape(scaled_img,(CAFFE_IMG_WIDTH,CAFFE_IMG_HEIGHT,3))
-    
-    return scaled_img
+    return crop_img
 
-def readImg():
-    img=None
-    for i in range(5):
-        ret,img=cap.read(0)
-    
-    ret,img = cap.read(0)
-    if ret == False:
-        print("read image failed")
+def transform_img(img, img_width=CAFFE_IMAGE_WIDTH, img_height=CAFFE_IMAGE_HEIGHT):    
+    #Histogram Equalization
+    img[:, :, 0] = cv2.equalizeHist(img[:, :, 0])
+    img[:, :, 1] = cv2.equalizeHist(img[:, :, 1])
+    img[:, :, 2] = cv2.equalizeHist(img[:, :, 2])
 
-    return ret, img
+    #Image Resizing
+    img = cv2.resize(img, (img_width, img_height), interpolation = cv2.INTER_CUBIC)
 
-def predict(cvImg):
-    tmpImg1 = cvImg/255.0
-    #caffImg = tmpImg1[:,:,(2,1,0)]
-    caffImg = tmpImg1[...,::-1]
-    #print(caffImg)
+    return img
+
+def predict(img, trs):
+    # warok around
+    img_path = '/tmp/tmp.jpg'
+    cv2.imwrite(img_path, img)
+    img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+    img = transform_img(img, img_width=CAFFE_IMAGE_WIDTH, img_height=CAFFE_IMAGE_HEIGHT)
+
+    net.blobs['data'].data[...] = trs.preprocess('data', img)
+    out = net.forward()
+    score = out['prob']
     
-    score = net.predict([caffImg], oversample=False)
     return score[0]
 
 def playSound(score, last_snd):
@@ -121,7 +133,7 @@ def handleKeyInput():
         return True
     return False
 
-net = initCaffe()
+net, trans  = initCaffe()
 cam, raw = initCv()
 sns = initSnd()
 
@@ -131,11 +143,10 @@ last_snd = 3
 for frame in cam.capture_continuous(raw, format="bgr", use_video_port=True):
 
     img = frame.array
-
-    #cv2.imshow('camera', img)
-    img = cvtImg(img)
+    img = cropImg(img)
     cv2.imshow('camera', img)
-    score0 = predict(img)
+
+    score0 = predict(img,trans)
     print(score0)
 
     last_snd = playSound(score0, last_snd)
