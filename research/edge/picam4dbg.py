@@ -31,21 +31,16 @@ def initCv():
 
     return camera, rawCap
 
-def cvtImg(img):
+def showImg(img):
     width = img.shape[1]
     height = img.shape[0]
-    offset = (width-height)/2
-    edge_len=height
-    
-    crop_img = img[0:edge_len, offset:offset+edge_len, :]
+    edge_len = int(height * 0.7)
+    ori = (int((width - edge_len)/2), int((height-edge_len)/2))
 
-    cv2.imshow('camera', crop_img)
+    img_rect = img.copy()
     
-    scaled_img = cv2.resize(crop_img,(CAFFE_IMG_WIDTH,CAFFE_IMG_HEIGHT))
-    #print("resized shape={0}".format(img.shape))
-    scaled_img = np.reshape(scaled_img,(CAFFE_IMG_WIDTH,CAFFE_IMG_HEIGHT,3))
-
-    return scaled_img
+    cv2.rectangle(img_rect, ori, (ori[0]+edge_len, ori[1]+edge_len), (255, 0, 0), 4)
+    cv2.imshow('camera', img_rect)
 
 def make_sure_path_exists(path):
     try:
@@ -104,7 +99,7 @@ for frame in cam.capture_continuous(raw, format="bgr", use_video_port=True):
     img = frame.array
 
     #cv2.imshow('camera', img)
-    img = cvtImg(img)
+    showImg(img)
 
     if(handleKeyInput(img)):
         break

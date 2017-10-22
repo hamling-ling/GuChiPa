@@ -1,4 +1,5 @@
 import caffe
+from caffe.proto import caffe_pb2
 import os
 import sys
 import cv2
@@ -13,9 +14,8 @@ print("DEEPLEARNING_ROOT=" + DEEPLEARNING_ROOT)
 
 CAFFE_ROOT = os.getenv("CAFFE_ROOT")
 MODEL_FILE = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffenet_deploy_1.prototxt'
-PRETRAINED =DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_5000.caffemodel'
-
-
+PRETRAINED = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_5000.caffemodel'
+MEAN_FILE  = DEEPLEARNING_ROOT + '/input/mean.binaryproto'
 
 gamma1 = 0.5
 LUT_G1 = np.arange(256, dtype = 'uint8' )
@@ -23,7 +23,14 @@ for i in range(256):
     LUT_G1[i] = 255 * pow(float(i) / 255, 1.0 / gamma1)
 
 def initCaffe():
-    net = caffe.Classifier(MODEL_FILE, PRETRAINED, image_dims=(64,64), raw_scale=255)
+    mean_blob = caffe_pb2.BlobProto()
+    mean_array = None
+    with open(MEAN_FILE) as f:
+        mean_blob.ParseFromString(f.read())
+        mean_array = np.asarray(mean_blob.data, dtype=np.float32).reshape(
+                    (mean_blob.channels, mean_blob.height, mean_blob.width))
+
+    net = caffe.Classifier(MODEL_FILE, PRETRAINED, image_dims=(64,64), raw_scale=255, mean=mean_array)
     caffe.set_mode_cpu()
     #caffe.set_mode_gpu()
     return net
@@ -75,7 +82,7 @@ def readImg():
 def predict(cvImg):
     tmpImg1 = cvImg/255.0
     caffImg = tmpImg1[:,:,(2,1,0)]
-    
+    print(caffImg.shape)
     score = net.predict([caffImg], oversample=False)
     return score[0]
 
