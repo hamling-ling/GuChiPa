@@ -25,7 +25,7 @@ done
 for OPT in "$@"PT in "$@"
 do
     if [ "$OPT" = "-gray" ] ; then
-	MOGRIFY_OPT="-colorspace gray -resize 28x28"
+	MOGRIFY_OPT="-depth 8 -colorspace gray -resize 28x28"
 	break;
     fi
 done
@@ -40,7 +40,7 @@ function resizeImage {
     fi
     find . -size 0 | xargs $XARGS_NO_RUN rm
     echo grayscalling and resizing $1
-    mogrify -depth 8 $MOGRIFY_OPT -format jpg "*.jpg"
+    mogrify $MOGRIFY_OPT -format jpg "*.jpg"
     #find . -name "*.jpg" | xargs $XARGS_NO_RUN rm
 
     popd
@@ -134,7 +134,7 @@ if [ "$PROCESS_AUG" == "TRUE" ] ; then
 	# x3
 	#python saltnoise.py
 	mv cnt src
-	./takesample.sh 10000 src tst
+	./takesample.sh 5000 src tst
 	./takesample.sh 10 src dbg
 	#./takesample.sh 10 src tst
 	#./takesample.sh 10 src dbg
