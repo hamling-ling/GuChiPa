@@ -49,7 +49,7 @@ layer {
 #  }
   data_param {
     source: "input/test_lmdb"
-    batch_size: 50
+    batch_size: 256
     backend: LMDB
   }
 }
