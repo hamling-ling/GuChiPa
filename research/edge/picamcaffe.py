@@ -17,7 +17,7 @@ print("DEEPLEARNING_ROOT=" + DEEPLEARNING_ROOT)
 
 CAFFE_ROOT = os.getenv("CAFFE_ROOT")
 MODEL_FILE = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffenet_deploy_1.prototxt'
-PRETRAINED = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_5000.caffemodel'
+PRETRAINED = DEEPLEARNING_ROOT + '/caffe_models/caffemodel_alelenet/caffe_model_1_iter_10000.caffemodel'
 MEAN_FILE  = DEEPLEARNING_ROOT + '/input/mean.binaryproto'
 
 CAMERA_WIDTH = 320
